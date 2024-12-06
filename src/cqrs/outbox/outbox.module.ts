@@ -7,6 +7,7 @@ import {
   OutboxDatabaseService,
 } from './entity/outbox-datasource';
 import { CqrsRMQModuleInterface } from '../rmq.cqrs.module';
+import { MessageCleaner } from './message-cleaner';
 
 @Module({})
 export class OutboxModule {
@@ -14,6 +15,7 @@ export class OutboxModule {
     return {
       module: OutboxModule,
       providers: [
+        MessageCleaner,
         OutboxService,
         OutboxDatabaseService,
         { provide: 'OPTIONS', useValue: options },

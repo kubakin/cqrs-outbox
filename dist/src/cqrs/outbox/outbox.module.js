@@ -13,11 +13,13 @@ const nestjs_rabbitmq_1 = require("@golevelup/nestjs-rabbitmq");
 const schedule_1 = require("@nestjs/schedule");
 const outbox_service_1 = require("./entity/outbox.service");
 const outbox_datasource_1 = require("./entity/outbox-datasource");
+const message_cleaner_1 = require("./message-cleaner");
 let OutboxModule = OutboxModule_1 = class OutboxModule {
     static forRoot(options) {
         return {
             module: OutboxModule_1,
             providers: [
+                message_cleaner_1.MessageCleaner,
                 outbox_service_1.OutboxService,
                 outbox_datasource_1.OutboxDatabaseService,
                 { provide: 'OPTIONS', useValue: options },

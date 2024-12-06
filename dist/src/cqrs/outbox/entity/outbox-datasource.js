@@ -24,7 +24,6 @@ let OutboxDatabaseService = class OutboxDatabaseService {
             entities: exports.entities,
             entityPrefix: `${this.options.name}_`,
             namingStrategy: new typeorm_naming_strategies_1.SnakeNamingStrategy(),
-            migrationsRun: true,
             logging: false,
             synchronize: true,
             applicationName: `${this.options.name}_outbox`,

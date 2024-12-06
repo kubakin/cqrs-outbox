@@ -23,6 +23,9 @@ dependencies:
   '@nestjs/typeorm':
     specifier: ^10.0.2
     version: 10.0.2(@nestjs/common@8.4.7)(@nestjs/core@8.4.7)(reflect-metadata@0.1.14)(rxjs@7.8.1)(typeorm@0.3.20)
+  luxon:
+    specifier: ^3.5.0
+    version: 3.5.0
   reflect-metadata:
     specifier: ^0.1.13
     version: 0.1.14
@@ -4184,6 +4187,11 @@ packages:
 
   /luxon@3.4.4:
     resolution: {integrity: sha512-zobTr7akeGHnv7eBOXcRgMeCP6+uyYsczwmeRCauvpvaAltgNyTbLH/+VaEAPUeWBT+1GuNmz4wC/6jtQzbbVA==}
+    engines: {node: '>=12'}
+    dev: false
+
+  /luxon@3.5.0:
+    resolution: {integrity: sha512-rh+Zjr6DNfUYR3bPwJEnuwDdqMbxZW7LOQfUN4B54+Cl+0o5zaU9RJ6bcidfDtC1cWCZXQ+nvX8bf6bAji37QQ==}
     engines: {node: '>=12'}
     dev: false
 

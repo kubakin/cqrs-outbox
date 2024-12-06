@@ -33,7 +33,6 @@ export class OutboxDatabaseService implements OnModuleDestroy {
       entities,
       entityPrefix: `${this.options.name}_`,
       namingStrategy: new SnakeNamingStrategy(),
-      migrationsRun: true,
       logging: false,
       synchronize: true,
       applicationName: `${this.options.name}_outbox`,
