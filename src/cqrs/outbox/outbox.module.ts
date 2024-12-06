@@ -17,7 +17,11 @@ export class OutboxModule {
   static forRoot(options: CqrsRMQModuleInterface): DynamicModule {
     return {
       module: OutboxModule,
-      providers: [OutboxService, OutboxDatabaseService],
+      providers: [
+        OutboxService,
+        OutboxDatabaseService,
+        { provide: 'OPTIONS', useValue: options },
+      ],
       exports: [OutboxDatabaseService],
       imports: [
         OutboxDatabaseModule.forRoot(options),

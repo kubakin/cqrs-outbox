@@ -20,7 +20,11 @@ let OutboxModule = OutboxModule_1 = class OutboxModule {
     static forRoot(options) {
         return {
             module: OutboxModule_1,
-            providers: [outbox_service_1.OutboxService, outbox_datasource_1.OutboxDatabaseService],
+            providers: [
+                outbox_service_1.OutboxService,
+                outbox_datasource_1.OutboxDatabaseService,
+                { provide: 'OPTIONS', useValue: options },
+            ],
             exports: [outbox_datasource_1.OutboxDatabaseService],
             imports: [
                 outbox_datasource_1.OutboxDatabaseModule.forRoot(options),
