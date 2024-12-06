@@ -25,7 +25,6 @@ export class RabbitMQSubscriber implements IMessageSource {
         this.logger.log(`Handled ${message.name} event`);
         if (this.bridge) {
           const clazz = Reflect.getMetadata(message.name, Event);
-          console.log(clazz);
           if (clazz) {
             this.logger.log(
               `Start message proccessing. ${message.name} ${JSON.stringify(message.data)}`,

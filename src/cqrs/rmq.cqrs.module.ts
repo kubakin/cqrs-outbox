@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject } from '@nestjs/common';
 import { RabbitMQModule } from '@golevelup/nestjs-rabbitmq';
 import { RabbitMQPublisher } from './publisher';
 import { RabbitMQSubscriber } from './subscriber';
@@ -14,7 +14,6 @@ import {
 import { ExplorerService } from '@nestjs/cqrs/dist/services/explorer.service';
 import {
   DatabaseOptions,
-  OutboxDatabaseModule,
 } from './outbox/entity/outbox-datasource';
 import { OutboxModule } from './outbox/outbox.module';
 
@@ -86,9 +85,7 @@ export class CqrsRMQModule<EventBase extends IEvent = IEvent>
   ) {}
 
   async onApplicationBootstrap() {
-    console.log('init');
-    console.log(this.options);
-    await this.eventSubscriber.connect(this.options.name || 'test');
+    await this.eventSubscriber.connect(this.options.name);
     this.eventSubscriber.bridgeEventsTo(this.eventBus.subject$);
 
     const { events, queries, sagas, commands } = this.explorerService.explore();

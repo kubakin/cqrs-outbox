@@ -5,15 +5,7 @@ import {
   Module,
   OnModuleDestroy,
 } from '@nestjs/common';
-import {
-  DataSource,
-  EntityManager,
-  EntityTarget,
-  ObjectLiteral,
-  QueryRunner,
-  Repository,
-  SelectQueryBuilder,
-} from 'typeorm';
+import { DataSource } from 'typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { Message } from './outbox.entity';
 import { CqrsRMQModuleInterface } from 'src/cqrs/rmq.cqrs.module';
@@ -26,12 +18,10 @@ export interface DatabaseOptions {
   database: string;
   username: string;
   password: string;
-  entities: any[];
 }
 
 @Injectable()
 export class OutboxDatabaseService implements OnModuleDestroy {
-  configuration: any;
   dataSource: DataSource;
   @Inject('OPTIONS') private options: CqrsRMQModuleInterface;
 
@@ -54,17 +44,13 @@ export class OutboxDatabaseService implements OnModuleDestroy {
       username: this.options.dbOptions.username,
       password: this.options.dbOptions.password,
     });
-    // await this.dataSource.initialize();
     try {
       if (!this.dataSource.isInitialized) {
-        // dataSource.enti
         await this.dataSource.initialize();
       }
     } catch (error) {
       console.error(error?.message);
     }
-    // return dataSource;
-    // await addTransactionalDataSource(this.dataSource.manager.connection);
 
     if (!this.dataSource.isInitialized)
       throw new Error('DataSource is not initialized');
@@ -75,9 +61,7 @@ export class OutboxDatabaseService implements OnModuleDestroy {
   }
 }
 
-@Module({
-  // providers: [DatabaseService],
-})
+@Module({})
 export class OutboxDatabaseModule {
   static async forRoot(
     options: CqrsRMQModuleInterface,

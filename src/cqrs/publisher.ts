@@ -8,7 +8,6 @@ import { generateString } from '@nestjs/typeorm';
 
 @Injectable()
 export class RabbitMQPublisher implements IEventPublisher {
-  // @Inject('DATA_SOURCE') private dataSource: DataSource;
   constructor(private service: OutboxDatabaseService) {}
 
   connect(): void {
