@@ -9,10 +9,8 @@ export interface DatabaseOptions {
     database: string;
     username: string;
     password: string;
-    entities: any[];
 }
 export declare class OutboxDatabaseService implements OnModuleDestroy {
-    configuration: any;
     dataSource: DataSource;
     private options;
     constructor();

@@ -27,7 +27,6 @@ let RabbitMQSubscriber = class RabbitMQSubscriber {
             this.logger.log(`Handled ${message.name} event`);
             if (this.bridge) {
                 const clazz = Reflect.getMetadata(message.name, event_1.Event);
-                console.log(clazz);
                 if (clazz) {
                     this.logger.log(`Start message proccessing. ${message.name} ${JSON.stringify(message.data)}`);
                     const receivedEvent = Object.assign(new clazz(), message.data);

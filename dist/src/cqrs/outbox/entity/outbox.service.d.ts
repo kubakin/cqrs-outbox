@@ -5,5 +5,5 @@ export declare class OutboxService {
     private service;
     constructor(connection: AmqpConnection, service: OutboxDatabaseService);
     private isRun;
-    publish1dd(): Promise<void>;
+    publish(): Promise<void>;
 }

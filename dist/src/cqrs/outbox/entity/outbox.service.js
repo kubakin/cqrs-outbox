@@ -21,7 +21,7 @@ let OutboxService = class OutboxService {
         this.service = service;
         this.isRun = false;
     }
-    async publish1dd() {
+    async publish() {
         if (!this.service.dataSource.isInitialized) {
             await this.service.dataSource.initialize();
         }
@@ -65,7 +65,7 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
-], OutboxService.prototype, "publish1dd", null);
+], OutboxService.prototype, "publish", null);
 OutboxService = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [nestjs_rabbitmq_1.AmqpConnection,

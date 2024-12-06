@@ -90,9 +90,7 @@ let CqrsRMQModule = CqrsRMQModule_1 = class CqrsRMQModule {
         this.options = options;
     }
     async onApplicationBootstrap() {
-        console.log('init');
-        console.log(this.options);
-        await this.eventSubscriber.connect(this.options.name || 'test');
+        await this.eventSubscriber.connect(this.options.name);
         this.eventSubscriber.bridgeEventsTo(this.eventBus.subject$);
         const { events, queries, sagas, commands } = this.explorerService.explore();
         this.eventBus.publisher = this.eventPublisher;
