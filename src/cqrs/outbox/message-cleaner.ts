@@ -11,6 +11,7 @@ export class MessageCleaner {
 
   @Cron(CronExpression.EVERY_HOUR)
   async clean() {
+    console.log('messages cleaning started');
     await this.service.dataSource.manager.getRepository(Message).delete({
       published: true,
       publishedAt: LessThan(

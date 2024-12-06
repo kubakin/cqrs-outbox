@@ -21,6 +21,7 @@ let MessageCleaner = class MessageCleaner {
         this.service = service;
     }
     async clean() {
+        console.log('messages cleaning started');
         await this.service.dataSource.manager.getRepository(event_1.Message).delete({
             published: true,
             publishedAt: (0, typeorm_1.LessThan)(luxon_1.DateTime.fromJSDate(new Date()).minus({ days: 1 }).toJSDate()),
