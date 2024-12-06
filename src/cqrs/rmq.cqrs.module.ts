@@ -87,6 +87,7 @@ export class CqrsRMQModule<EventBase extends IEvent = IEvent>
 
   async onApplicationBootstrap() {
     console.log('init');
+    console.log(this.options);
     await this.eventSubscriber.connect(this.options.name || 'test');
     this.eventSubscriber.bridgeEventsTo(this.eventBus.subject$);
 
