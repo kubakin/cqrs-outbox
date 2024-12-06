@@ -3,6 +3,7 @@ import { RabbitMQSubscriber } from './subscriber';
 import { DynamicModule, OnApplicationBootstrap } from '@nestjs/common';
 import { CommandBus, QueryBus, EventBus, IEvent } from '@nestjs/cqrs';
 import { ExplorerService } from '@nestjs/cqrs/dist/services/explorer.service';
+export * from '@nestjs/cqrs';
 export declare class ExplorerService1 {
 }
 export interface CqrsRMQModuleInterface {

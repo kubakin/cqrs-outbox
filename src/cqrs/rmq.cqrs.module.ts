@@ -18,7 +18,7 @@ import { OutboxModule } from './outbox/outbox.module';
 const getRabbitUri = () => {
   return process.env.RABBIT_URL || 'amqp://127.0.0.1:5672';
 };
-
+export * from '@nestjs/cqrs';
 export class ExplorerService1 {}
 
 export interface CqrsRMQModuleInterface {

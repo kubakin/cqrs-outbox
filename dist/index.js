@@ -14,8 +14,9 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CqrsRMQModule = void 0;
-var rmq_cqrs_module_1 = require("./src/cqrs/rmq.cqrs.module");
-Object.defineProperty(exports, "CqrsRMQModule", { enumerable: true, get: function () { return rmq_cqrs_module_1.CqrsRMQModule; } });
+exports.Event = void 0;
+__exportStar(require("./src/cqrs/rmq.cqrs.module"), exports);
 __exportStar(require("@nestjs/cqrs"), exports);
+var event_1 = require("./src/cqrs/msg/event");
+Object.defineProperty(exports, "Event", { enumerable: true, get: function () { return event_1.Event; } });
 //# sourceMappingURL=index.js.map
