@@ -1,7 +1,12 @@
 {
   "name": "cqrs-outbox",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kubakin/cqrs-outbox.git"
+  },
   "version": "0.0.1",
   "description": "",
+  "main": "dist/index.js",
   "author": "",
   "private": true,
   "license": "UNLICENSED",
