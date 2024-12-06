@@ -20,7 +20,6 @@ import { CqrsRMQModuleInterface } from 'src/cqrs/rmq.cqrs.module';
 
 export const entities = [Message];
 
-
 export interface DatabaseOptions {
   host: string;
   port: number;
@@ -33,10 +32,12 @@ export interface DatabaseOptions {
 @Injectable()
 export class OutboxDatabaseService implements OnModuleDestroy {
   configuration: any;
-  readonly dataSource: DataSource;
-  @Inject('OPTIONS') private options: CqrsRMQModuleInterface
+  dataSource: DataSource;
+  @Inject('OPTIONS') private options: CqrsRMQModuleInterface;
 
-  constructor() {
+  constructor() {}
+
+  async onModuleInit(): Promise<void> {
     this.dataSource = new DataSource({
       type: 'postgres',
       entities,
@@ -53,9 +54,6 @@ export class OutboxDatabaseService implements OnModuleDestroy {
       username: this.options.dbOptions.username,
       password: this.options.dbOptions.password,
     });
-  }
-
-  async onModuleInit(): Promise<void> {
     // await this.dataSource.initialize();
     try {
       if (!this.dataSource.isInitialized) {
@@ -81,10 +79,15 @@ export class OutboxDatabaseService implements OnModuleDestroy {
   // providers: [DatabaseService],
 })
 export class OutboxDatabaseModule {
-  static async forRoot(options: CqrsRMQModuleInterface): Promise<DynamicModule> {
+  static async forRoot(
+    options: CqrsRMQModuleInterface,
+  ): Promise<DynamicModule> {
     return {
       module: OutboxDatabaseModule,
-      providers: [OutboxDatabaseService, {provide: "OPTIONS", useValue: options}],
+      providers: [
+        OutboxDatabaseService,
+        { provide: 'OPTIONS', useValue: options },
+      ],
       exports: [OutboxDatabaseService],
     };
   }

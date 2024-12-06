@@ -17,7 +17,8 @@ const typeorm_naming_strategies_1 = require("typeorm-naming-strategies");
 const outbox_entity_1 = require("./outbox.entity");
 exports.entities = [outbox_entity_1.Message];
 let OutboxDatabaseService = class OutboxDatabaseService {
-    constructor() {
+    constructor() { }
+    async onModuleInit() {
         this.dataSource = new typeorm_1.DataSource({
             type: 'postgres',
             entities: exports.entities,
@@ -34,8 +35,6 @@ let OutboxDatabaseService = class OutboxDatabaseService {
             username: this.options.dbOptions.username,
             password: this.options.dbOptions.password,
         });
-    }
-    async onModuleInit() {
         try {
             if (!this.dataSource.isInitialized) {
                 await this.dataSource.initialize();
@@ -64,7 +63,10 @@ let OutboxDatabaseModule = OutboxDatabaseModule_1 = class OutboxDatabaseModule {
     static async forRoot(options) {
         return {
             module: OutboxDatabaseModule_1,
-            providers: [OutboxDatabaseService, { provide: "OPTIONS", useValue: options }],
+            providers: [
+                OutboxDatabaseService,
+                { provide: 'OPTIONS', useValue: options },
+            ],
             exports: [OutboxDatabaseService],
         };
     }

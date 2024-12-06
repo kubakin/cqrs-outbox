@@ -13,7 +13,7 @@ export interface DatabaseOptions {
 }
 export declare class OutboxDatabaseService implements OnModuleDestroy {
     configuration: any;
-    readonly dataSource: DataSource;
+    dataSource: DataSource;
     private options;
     constructor();
     onModuleInit(): Promise<void>;
