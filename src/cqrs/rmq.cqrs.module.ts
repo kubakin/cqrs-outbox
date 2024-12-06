@@ -12,18 +12,19 @@ import {
   IEvent,
 } from '@nestjs/cqrs';
 import { ExplorerService } from '@nestjs/cqrs/dist/services/explorer.service';
-import { OutboxDatabaseModule } from './outbox/entity/outbox-datasource';
+import {
+  DatabaseOptions,
+  OutboxDatabaseModule,
+} from './outbox/entity/outbox-datasource';
 import { OutboxModule } from './outbox/outbox.module';
 
-const getRabbitUri = () => {
-  return process.env.RABBIT_URL || 'amqp://127.0.0.1:5672';
-};
 export * from '@nestjs/cqrs';
 export class ExplorerService1 {}
 
 export interface CqrsRMQModuleInterface {
   name: string;
   uri: string[];
+  dbOptions: DatabaseOptions;
 }
 
 @Module({})
@@ -34,12 +35,12 @@ export class CqrsRMQModule<EventBase extends IEvent = IEvent>
    * Registers the CQRS Module globally.
    * @returns DynamicModule
    */
-  static forRoot(name = 'referral'): DynamicModule {
+  static forRoot(options: CqrsRMQModuleInterface): DynamicModule {
     return {
       module: CqrsRMQModule,
       global: true,
       imports: [
-        OutboxModule.forRoot(),
+        OutboxModule.forRoot(options),
         RabbitMQModule.forRoot(RabbitMQModule, {
           exchanges: [
             {
@@ -50,10 +51,11 @@ export class CqrsRMQModule<EventBase extends IEvent = IEvent>
           connectionManagerOptions: {
             heartbeatIntervalInSeconds: 0,
           },
-          uri: getRabbitUri().split(','),
+          uri: options.uri,
         }),
       ],
       providers: [
+        { provide: 'OPTIONS', useValue: options },
         CommandBus,
         QueryBus,
         EventBus,
@@ -80,11 +82,12 @@ export class CqrsRMQModule<EventBase extends IEvent = IEvent>
     private readonly queryBus: QueryBus,
     private eventSubscriber: RabbitMQSubscriber,
     private readonly eventPublisher: RabbitMQPublisher,
+    @Inject('OPTIONS') private options: CqrsRMQModuleInterface,
   ) {}
 
   async onApplicationBootstrap() {
     console.log('init');
-    await this.eventSubscriber.connect('ml-referral');
+    await this.eventSubscriber.connect(this.options.name);
     this.eventSubscriber.bridgeEventsTo(this.eventBus.subject$);
 
     const { events, queries, sagas, commands } = this.explorerService.explore();

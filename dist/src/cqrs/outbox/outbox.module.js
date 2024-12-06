@@ -17,13 +17,13 @@ const getRabbitUri = () => {
     return process.env.RABBIT_URL || 'amqp://127.0.0.1:5672';
 };
 let OutboxModule = OutboxModule_1 = class OutboxModule {
-    static forRoot() {
+    static forRoot(options) {
         return {
             module: OutboxModule_1,
             providers: [outbox_service_1.OutboxService, outbox_datasource_1.OutboxDatabaseService],
             exports: [outbox_datasource_1.OutboxDatabaseService],
             imports: [
-                outbox_datasource_1.OutboxDatabaseModule.forRoot(),
+                outbox_datasource_1.OutboxDatabaseModule.forRoot(options),
                 schedule_1.ScheduleModule.forRoot(),
                 nestjs_rabbitmq_1.RabbitMQModule.forRoot(nestjs_rabbitmq_1.RabbitMQModule, {
                     exchanges: [
@@ -35,7 +35,7 @@ let OutboxModule = OutboxModule_1 = class OutboxModule {
                     connectionManagerOptions: {
                         heartbeatIntervalInSeconds: 0,
                     },
-                    uri: getRabbitUri().split(','),
+                    uri: options.uri,
                 }),
             ],
         };

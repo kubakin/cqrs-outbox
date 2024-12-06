@@ -21,20 +21,18 @@ let OutboxDatabaseService = class OutboxDatabaseService {
         this.dataSource = new typeorm_1.DataSource({
             type: 'postgres',
             entities: exports.entities,
-            migrations: ['migrations/referral/*{.ts,.js}'],
-            migrationsTableName: 'referral_migrations',
-            entityPrefix: 'referral_',
+            entityPrefix: `${this.options.name}_`,
             namingStrategy: new typeorm_naming_strategies_1.SnakeNamingStrategy(),
             migrationsRun: true,
             logging: false,
             synchronize: true,
-            applicationName: 'outbox',
-            name: 'default',
-            host: 'localhost',
-            port: 5432,
-            database: 'mlreferral',
-            username: 'postgres',
-            password: 'postgres',
+            applicationName: `${this.options.name}_outbox`,
+            name: 'outbox',
+            host: this.options.dbOptions.host,
+            port: this.options.dbOptions.port,
+            database: this.options.dbOptions.database,
+            username: this.options.dbOptions.username,
+            password: this.options.dbOptions.password,
         });
     }
     async onModuleInit() {
@@ -53,16 +51,20 @@ let OutboxDatabaseService = class OutboxDatabaseService {
         await this.dataSource.destroy();
     }
 };
+__decorate([
+    (0, common_1.Inject)('OPTIONS'),
+    __metadata("design:type", Object)
+], OutboxDatabaseService.prototype, "options", void 0);
 OutboxDatabaseService = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [])
 ], OutboxDatabaseService);
 exports.OutboxDatabaseService = OutboxDatabaseService;
 let OutboxDatabaseModule = OutboxDatabaseModule_1 = class OutboxDatabaseModule {
-    static async forRoot() {
+    static async forRoot(options) {
         return {
             module: OutboxDatabaseModule_1,
-            providers: [OutboxDatabaseService],
+            providers: [OutboxDatabaseService, { provide: "OPTIONS", useValue: options }],
             exports: [OutboxDatabaseService],
         };
     }

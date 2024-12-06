@@ -7,19 +7,20 @@ import {
   OutboxDatabaseModule,
   OutboxDatabaseService,
 } from './entity/outbox-datasource';
+import { CqrsRMQModuleInterface } from '../rmq.cqrs.module';
 const getRabbitUri = () => {
   return process.env.RABBIT_URL || 'amqp://127.0.0.1:5672';
 };
 
 @Module({})
 export class OutboxModule {
-  static forRoot(): DynamicModule {
+  static forRoot(options: CqrsRMQModuleInterface): DynamicModule {
     return {
       module: OutboxModule,
       providers: [OutboxService, OutboxDatabaseService],
       exports: [OutboxDatabaseService],
       imports: [
-        OutboxDatabaseModule.forRoot(),
+        OutboxDatabaseModule.forRoot(options),
         ScheduleModule.forRoot(),
         RabbitMQModule.forRoot(RabbitMQModule, {
           exchanges: [
@@ -31,7 +32,7 @@ export class OutboxModule {
           connectionManagerOptions: {
             heartbeatIntervalInSeconds: 0,
           },
-          uri: getRabbitUri().split(','),
+          uri: options.uri,
         }),
       ],
     };

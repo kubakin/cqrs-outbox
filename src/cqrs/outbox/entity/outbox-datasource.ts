@@ -1,9 +1,8 @@
 import {
   DynamicModule,
-  Global,
+  Inject,
   Injectable,
   Module,
-  OnApplicationBootstrap,
   OnModuleDestroy,
 } from '@nestjs/common';
 import {
@@ -17,38 +16,15 @@ import {
 } from 'typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { Message } from './outbox.entity';
+import { CqrsRMQModuleInterface } from 'src/cqrs/rmq.cqrs.module';
 
 export const entities = [Message];
 
-interface WriteConnection {
-  readonly startTransaction: (
-    level?:
-      | 'READ UNCOMMITTED'
-      | 'READ COMMITTED'
-      | 'REPEATABLE READ'
-      | 'SERIALIZABLE',
-  ) => Promise<void>;
-  readonly commitTransaction: () => Promise<void>;
-  readonly rollbackTransaction: () => Promise<void>;
-  readonly isTransactionActive: boolean;
-  readonly manager: EntityManager;
-}
-
-interface ReadConnection {
-  readonly getRepository: <T extends ObjectLiteral>(
-    target: EntityTarget<T>,
-  ) => Repository<T>;
-  readonly query: (query: string) => Promise<void>;
-  readonly createQueryBuilder: <Entity extends ObjectLiteral>(
-    entityClass: EntityTarget<Entity>,
-    alias: string,
-    queryRunner?: QueryRunner,
-  ) => SelectQueryBuilder<Entity>;
-}
 
 export interface DatabaseOptions {
   host: string;
   port: number;
+  database: string;
   username: string;
   password: string;
   entities: any[];
@@ -58,25 +34,24 @@ export interface DatabaseOptions {
 export class OutboxDatabaseService implements OnModuleDestroy {
   configuration: any;
   readonly dataSource: DataSource;
+  @Inject('OPTIONS') private options: CqrsRMQModuleInterface
 
   constructor() {
     this.dataSource = new DataSource({
       type: 'postgres',
       entities,
-      migrations: ['migrations/referral/*{.ts,.js}'],
-      migrationsTableName: 'referral_migrations',
-      entityPrefix: 'referral_',
+      entityPrefix: `${this.options.name}_`,
       namingStrategy: new SnakeNamingStrategy(),
       migrationsRun: true,
       logging: false,
       synchronize: true,
-      applicationName: 'outbox',
-      name: 'default',
-      host: 'localhost',
-      port: 5432,
-      database: 'mlreferral',
-      username: 'postgres',
-      password: 'postgres',
+      applicationName: `${this.options.name}_outbox`,
+      name: 'outbox',
+      host: this.options.dbOptions.host,
+      port: this.options.dbOptions.port,
+      database: this.options.dbOptions.database,
+      username: this.options.dbOptions.username,
+      password: this.options.dbOptions.password,
     });
   }
 
@@ -106,14 +81,11 @@ export class OutboxDatabaseService implements OnModuleDestroy {
   // providers: [DatabaseService],
 })
 export class OutboxDatabaseModule {
-  static async forRoot(): Promise<DynamicModule> {
-    // const service = new DatabaseService();
-    // await service.onModuleInit();
+  static async forRoot(options: CqrsRMQModuleInterface): Promise<DynamicModule> {
     return {
       module: OutboxDatabaseModule,
-      providers: [OutboxDatabaseService],
+      providers: [OutboxDatabaseService, {provide: "OPTIONS", useValue: options}],
       exports: [OutboxDatabaseService],
-      // exports: providers,
     };
   }
 }
